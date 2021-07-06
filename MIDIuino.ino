@@ -4,42 +4,37 @@
 MIDI_CREATE_INSTANCE(HardwareSerial, Serial1, MIDI);
 
 void noteOn(byte channel, byte pitch, byte velocity) {
-  /*
   Serial.print("On:");
   Serial.print(channel);
   Serial.print(", ");
   Serial.print(pitch);
   Serial.print(", ");
   Serial.println(velocity);
-  */
   
-  midiEventPacket_t noteOn = {0x09, 0x90 | channel, pitch, velocity};
+  midiEventPacket_t noteOn = {0x09, 0x90 | (channel - 1), pitch, velocity};
   MidiUSB.sendMIDI(noteOn);
 }
 
 void noteOff(byte channel, byte pitch, byte velocity) {
-  /*
   Serial.print("Off:");
   Serial.print(channel);
   Serial.print(", ");
   Serial.print(pitch);
   Serial.print(", ");
   Serial.println(velocity);
-  */
   
-  midiEventPacket_t noteOff = {0x08, 0x80 | channel, pitch, velocity};
+  midiEventPacket_t noteOff = {0x08, 0x80 | (channel - 1), pitch, velocity};
   MidiUSB.sendMIDI(noteOff);
 }
 
 void controlChange(byte channel, byte control, byte value) { 
-  midiEventPacket_t event = {0x0B, 0xB0 | channel, control, value};
+  midiEventPacket_t event = {0x0B, 0xB0 | (channel - 1), control, value};
   MidiUSB.sendMIDI(event);
 }
 
 
-void setup()
-{
-    MIDI.begin();           // Launch MIDI, by default listening to channel 1.
+void setup(){
+    MIDI.begin(MIDI_CHANNEL_OMNI);
     Serial.begin(9600);
 }
 
